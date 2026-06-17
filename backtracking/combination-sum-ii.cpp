@@ -1,31 +1,32 @@
 class Solution {
-public:
-    vector<vector<int>> ans;
-    vector<int> path;
-
-    void backtrack(int idx, int target, vector<int>& candidates) {
+private:
+    void findCombinations(int ind, int target, vector<int>& arr, vector<vector<int>>& ans, vector<int>& ds) {
+        // Change 3: Directly check if target is reached
         if (target == 0) {
-            ans.push_back(path);
+            ans.push_back(ds);
             return;
         }
 
-        for (int i = idx; i < candidates.size(); i++) {
-            // Skip duplicates at same level
-            if (i > idx && candidates[i] == candidates[i - 1])
-                continue;
+        // Change 2: Loop to pick next numbers and skip duplicates
+        for (int i = ind; i < arr.size(); i++) {
+            if (i > ind && arr[i] == arr[i - 1]) continue; 
+            if (arr[i] > target) break; 
 
-            if (candidates[i] > target)
-                break; // pruning
-
-            path.push_back(candidates[i]);
-            backtrack(i + 1, target - candidates[i], candidates);
-            path.pop_back();
+            ds.push_back(arr[i]);
+            findCombinations(i + 1, target - arr[i], arr, ans, ds); // Note: i + 1
+            ds.pop_back();
         }
     }
 
+public:
     vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
-        sort(candidates.begin(), candidates.end());
-        backtrack(0, target, candidates);
+        vector<vector<int>> ans;
+        vector<int> ds;
+        
+        // Change 1: Sorting is mandatory here
+        sort(candidates.begin(), candidates.end()); 
+        
+        findCombinations(0, target, candidates, ans, ds);
         return ans;
     }
 };
