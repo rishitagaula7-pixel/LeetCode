@@ -1,29 +1,27 @@
 class Solution {
-public:
-    vector<vector<int>> result;
-    vector<int> path;
-
-    void backtrack(vector<int>& candidates, int target, int start) {
-        // Base case: exact sum achieved
-        if (target == 0) {
-            result.push_back(path);
+private:
+    void findCombinations(int ind, int target, vector<int>& arr, vector<vector<int>>& ans, vector<int>& ds) {
+        if (ind == arr.size()) {
+            if (target == 0) {
+                ans.push_back(ds);
+            }
             return;
         }
 
-        // Try all candidates starting from 'start'
-        for (int i = start; i < candidates.size(); i++) {
-            if (candidates[i] > target)
-                continue;
-
-            path.push_back(candidates[i]);
-            // i (not i+1) because we can reuse same element
-            backtrack(candidates, target - candidates[i], i);
-            path.pop_back(); // backtrack
+        if (arr[ind] <= target) {
+            ds.push_back(arr[ind]);
+            findCombinations(ind, target - arr[ind], arr, ans, ds);
+            ds.pop_back();
         }
+
+        findCombinations(ind + 1, target, arr, ans, ds);
     }
 
+public:
     vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
-        backtrack(candidates, target, 0);
-        return result;
+        vector<vector<int>> ans;
+        vector<int> ds;
+        findCombinations(0, target, candidates, ans, ds);
+        return ans;
     }
 };
