@@ -1,36 +1,20 @@
 class Solution {
 public:
-    vector<vector<int>> ans;
-
-    void backtrack(vector<int>& nums, vector<int>& temp, vector<bool>& used) {
-        // Base case: one permutation formed
-        if (temp.size() == nums.size()) {
-            ans.push_back(temp);
-            return;
-        }
-
-        // Try each number
-        for (int i = 0; i < nums.size(); i++) {
-            if (used[i]) continue;   // skip if already used
-
-            // Choose
-            used[i] = true;
-            temp.push_back(nums[i]);
-
-            // Explore
-            backtrack(nums, temp, used);
-
-            // Unchoose (Backtrack)
-            temp.pop_back();
-            used[i] = false;
-        }
+void recuPermute(int index, vector<int>&nums,vector<vector<int>>&ans){
+    if(index==nums.size()){
+        ans.push_back(nums);
+        return;
     }
-
+    for(int i=index;i<nums.size();i++){
+        swap(nums[index],nums[i]);
+        recuPermute(index+1,nums,ans);
+        swap(nums[index],nums[i]);
+    }
+}
     vector<vector<int>> permute(vector<int>& nums) {
-        vector<int> temp;
-        vector<bool> used(nums.size(), false);
-
-        backtrack(nums, temp, used);
+        vector<vector<int>>ans;
+        recuPermute(0,nums,ans);
         return ans;
+        
     }
 };
